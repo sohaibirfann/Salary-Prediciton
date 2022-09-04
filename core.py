@@ -110,3 +110,11 @@ def main():
     
   except FileExistsError:
     print('No csv file in the directory')
+    print('Press ENTER key to exit')
+    input()
+    exit()
+    
+    
+if __name__ == "__main__":
+  main()
+  input()
