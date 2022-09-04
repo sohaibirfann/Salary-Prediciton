@@ -27,5 +27,26 @@ def checkcsv():
   else:
     return csv_files
   
+def display_and_select_csv(csv_files):
+  i = 0
+  for file_name in csv_files:
+    print(i, '...', file_name)
+    i += 1
+    
+  return csv_files[int(input("Select file to create ML model"))]
+
+def graph(X_train, Y_train, regressionObject, X_test, Y_test, Y_pred):
+  plt.scatter(X_train, Y_train, color='red', label='training data')
+  plt.plot(X_train, regressionObject.predict(X_train), color='blue', label='Best Fit')
+  plt.scatter(X_test, Y_test, color='green', label='test data')
+  plt.scatter(X_test, Y_pred, color='black', label='Pred test data')
+  
+  plt.title("Salary vs Experience")
+  plt.xlabel('Years of Experience')
+  plt.ylabel("Salary")
+  
+  plt.legend()
+  plt.show()
+  
   
   
