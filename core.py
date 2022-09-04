@@ -35,6 +35,7 @@ def display_and_select_csv(csv_files):
     
   return csv_files[int(input("Select file to create ML model"))]
 
+
 def graph(X_train, Y_train, regressionObject, X_test, Y_test, Y_pred):
   plt.scatter(X_train, Y_train, color='red', label='training data')
   plt.plot(X_train, regressionObject.predict(X_train), color='blue', label='Best Fit')
@@ -48,5 +49,64 @@ def graph(X_train, Y_train, regressionObject, X_test, Y_test, Y_pred):
   plt.legend()
   plt.show()
   
+
+def main():
+  welcome()
   
-  
+  try:
+    csv_files = checkcsv()
+    if csv_files == 'No csv file in the directory':
+      raise FileNotFoundError('No csv file in the directory')
+    csv_file = display_and_select_csv(csv_files)
+    
+    print(csv_file, 'is selected')
+    print('Creating Dataset')
+    
+    dataset = pd.read_csv(csv_file)
+    print('Dataset created')
+    
+    X = dataset.iloc[:,:-1].values
+    Y = dataset.iloc[:,:-1].values
+    
+    s = float(input("Enter test data size (between 0 and 1)"))
+    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=s)
+    print("Model is created")
+    print("Press ENTER key to predict test data in trained model")
+    input()
+    
+    Y_pred = regressionObject.predict(X_test)
+    i = 0
+    print(X_test, '...', Y_test, ' ...', Y_pred)
+    
+    while i < len(X_test):
+      print(X_test[i], '...', Y_test[i], '...', Y_pred[i])
+      i += 1
+      
+    print("Press ENTER key to see above result in graphical format")
+    input()
+    
+    graph(X_train, Y_train, regressionObject, X_test, Y_test, Y_pred)
+    r2 = r2_score(Y_test, Y_pred)
+    print("Our model is %2.2f%% accurate" %(r2 * 100))
+    
+    print("Now you can predict salary of an employee using our model")
+    print("\nEnter experience in years of the candidates, separated by comma")
+    
+    exp = [float(e) for e in input().split(',')]
+    ex = []
+    for x in exp:
+      ex.append([x])
+      
+    experience = np.array(ex)
+    salaries = regressionObject.predict(experience)
+    
+    plt.scatter(experience, salaries, color='black')
+    plt.xlabel('Years of Experience')
+    plt.ylabel('Salaries')
+    plt.show()
+    
+    d = pd.DataFrame({'Experience':exp,'Salaries':salaries})
+    print(d)
+    
+  except FileExistsError:
+    print('No csv file in the directory')
